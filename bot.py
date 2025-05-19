@@ -2,7 +2,7 @@ from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMar
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 TOKEN = 'ТВОЙ_ТОКЕН_ТУТ'  # Токен бота від @BotFather
-WEBAPP_URL = 'https://kultup.github.io/quizBot'  # URL вашого веб-додатку на GitHub Pages
+WEBAPP_URL = 'https://t.me/QuizKM_bot/quizapp'  # Офіційний URL веб-додатку
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [

@@ -9,14 +9,53 @@
 </head>
 <body>
     <div class="container">
-        <h1>Мій Telegram Web App</h1>
-        <div class="card">
-            <h2>Привіт, <span id="userName">Користувач</span>!</h2>
-            <div class="form-group">
-                <input type="text" id="messageInput" placeholder="Введіть повідомлення">
-                <button onclick="sendMessage()">Надіслати</button>
+        <!-- Екран авторизації -->
+        <div id="authScreen" class="screen">
+            <h1>Реєстрація</h1>
+            <div class="auth-steps">
+                <!-- Крок 1: Ім'я -->
+                <div class="step" id="step1">
+                    <h2>Крок 1: Ваше ім'я</h2>
+                    <input type="text" id="nameInput" placeholder="Введіть ваше ім'я">
+                    <button onclick="nextStep(1)">Далі</button>
+                </div>
+                
+                <!-- Крок 2: Посада -->
+                <div class="step" id="step2" style="display: none;">
+                    <h2>Крок 2: Ваша посада</h2>
+                    <input type="text" id="positionInput" placeholder="Введіть вашу посаду">
+                    <div class="button-group">
+                        <button onclick="prevStep(2)">Назад</button>
+                        <button onclick="nextStep(2)">Далі</button>
+                    </div>
+                </div>
+                
+                <!-- Крок 3: Місто -->
+                <div class="step" id="step3" style="display: none;">
+                    <h2>Крок 3: Ваше місто</h2>
+                    <input type="text" id="cityInput" placeholder="Введіть ваше місто">
+                    <div class="button-group">
+                        <button onclick="prevStep(3)">Назад</button>
+                        <button onclick="completeAuth()">Завершити</button>
+                    </div>
+                </div>
             </div>
-            <div id="messages" class="messages"></div>
+        </div>
+
+        <!-- Головний екран (спочатку прихований) -->
+        <div id="mainScreen" class="screen" style="display: none;">
+            <h1>Вітаємо, <span id="userName">Користувач</span>!</h1>
+            <div class="user-info">
+                <p>Посада: <span id="userPosition">-</span></p>
+                <p>Місто: <span id="userCity">-</span></p>
+            </div>
+            <div class="card">
+                <div class="form-group">
+                    <input type="text" id="messageInput" placeholder="Введіть повідомлення">
+                    <button onclick="sendMessage()">Надіслати</button>
+                </div>
+                <div id="messages" class="messages"></div>
+            </div>
         </div>
     </div>
     <script src="app.js"></script>
