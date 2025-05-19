@@ -1,8 +1,17 @@
 from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+import os
+from dotenv import load_dotenv
 
-TOKEN = 'ТВОЙ_ТОКЕН_ТУТ'  # Токен бота від @BotFather
-WEBAPP_URL = 'https://t.me/QuizKM_bot/quizapp'  # Офіційний URL веб-додатку
+# Завантажуємо змінні середовища з .env файлу
+load_dotenv()
+
+# Отримуємо токен та URL з змінних середовища
+TOKEN = os.getenv('BOT_TOKEN')
+WEBAPP_URL = os.getenv('WEBAPP_URL')
+
+if not TOKEN:
+    raise ValueError("Не знайдено токен бота. Перевірте файл .env")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
