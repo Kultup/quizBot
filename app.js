@@ -32,6 +32,7 @@ const quizQuestions = [
 
 let currentQuestion = 0;
 let score = 0;
+let currentStep = 1;
 
 // Ініціалізація після завантаження DOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -62,46 +63,30 @@ function initEventHandlers() {
 }
 
 function nextStep() {
-    console.log('Next step clicked');
-    const currentStepElement = document.querySelector(`.step:nth-child(${currentStep})`);
-    const nextStepElement = document.querySelector(`.step:nth-child(${currentStep + 1})`);
-    
-    if (!currentStepElement || !nextStepElement) {
-        console.error('Step elements not found');
-        return;
-    }
-    
+    const currentStepElement = document.getElementById('step' + currentStep);
+    const nextStepElement = document.getElementById('step' + (currentStep + 1));
+
+    if (!currentStepElement || !nextStepElement) return;
+
     // Зберігаємо дані поточного кроку
     const input = currentStepElement.querySelector('input');
     if (input) {
-        switch(currentStep) {
-            case 1:
-                userData.name = input.value;
-                break;
-            case 2:
-                userData.age = input.value;
-                break;
-            case 3:
-                userData.email = input.value;
-                break;
-        }
+        if (currentStep === 1) userData.name = input.value;
+        if (currentStep === 2) userData.age = input.value;
+        if (currentStep === 3) userData.email = input.value;
     }
-    
+
     currentStepElement.style.display = 'none';
     nextStepElement.style.display = 'block';
     currentStep++;
 }
 
 function prevStep() {
-    console.log('Prev step clicked');
-    const currentStepElement = document.querySelector(`.step:nth-child(${currentStep})`);
-    const prevStepElement = document.querySelector(`.step:nth-child(${currentStep - 1})`);
-    
-    if (!currentStepElement || !prevStepElement) {
-        console.error('Step elements not found');
-        return;
-    }
-    
+    const currentStepElement = document.getElementById('step' + currentStep);
+    const prevStepElement = document.getElementById('step' + (currentStep - 1));
+
+    if (!currentStepElement || !prevStepElement) return;
+
     currentStepElement.style.display = 'none';
     prevStepElement.style.display = 'block';
     currentStep--;
