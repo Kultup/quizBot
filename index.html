@@ -49,12 +49,36 @@
                 <p>Посада: <span id="userPosition">-</span></p>
                 <p>Місто: <span id="userCity">-</span></p>
             </div>
-            <div class="card">
-                <div class="form-group">
-                    <input type="text" id="messageInput" placeholder="Введіть повідомлення">
-                    <button onclick="sendMessage()">Надіслати</button>
+            
+            <!-- Екран вікторини -->
+            <div id="quizScreen" class="quiz-screen">
+                <div class="quiz-header">
+                    <h2>Питання <span id="currentQuestion">1</span> з <span id="totalQuestions">10</span></h2>
+                    <div class="progress-bar">
+                        <div class="progress" id="quizProgress"></div>
+                    </div>
                 </div>
-                <div id="messages" class="messages"></div>
+                
+                <div class="question-container">
+                    <h3 id="questionText">Текст питання</h3>
+                    <div class="answers-container" id="answersContainer">
+                        <!-- Відповіді будуть додані через JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="quiz-controls">
+                    <button id="nextQuestion" onclick="nextQuestion()" style="display: none;">Наступне питання</button>
+                </div>
+            </div>
+            
+            <!-- Екран результату (спочатку прихований) -->
+            <div id="resultScreen" class="screen" style="display: none;">
+                <h2>Результат вікторини</h2>
+                <div class="result-info">
+                    <p>Правильних відповідей: <span id="correctAnswers">0</span> з <span id="totalAnswers">10</span></p>
+                    <p>Ваш результат: <span id="resultPercentage">0</span>%</p>
+                </div>
+                <button onclick="restartQuiz()">Спробувати ще раз</button>
             </div>
         </div>
     </div>

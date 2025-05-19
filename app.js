@@ -1,5 +1,5 @@
 // Ініціалізація Telegram WebApp
-const tg = window.Telegram.WebApp;
+let tg = window.Telegram.WebApp;
 
 // Розгортаємо WebApp на весь екран
 tg.expand();
@@ -7,122 +7,231 @@ tg.expand();
 // Змінні для зберігання даних користувача
 let userData = {
     name: '',
-    position: '',
-    city: ''
+    age: '',
+    email: ''
 };
 
-// Функція для переходу до наступного кроку
-function nextStep(currentStep) {
-    console.log('Перехід до кроку:', currentStep + 1);
-    
-    // Перевіряємо введені дані
-    if (currentStep === 1) {
-        const nameInput = document.getElementById('nameInput');
-        const name = nameInput.value.trim();
-        console.log('Введене ім\'я:', name);
-        
-        if (!name) {
-            alert('Будь ласка, введіть ваше ім\'я');
-            return;
-        }
-        userData.name = name;
-    } else if (currentStep === 2) {
-        const positionInput = document.getElementById('positionInput');
-        const position = positionInput.value.trim();
-        console.log('Введена посада:', position);
-        
-        if (!position) {
-            alert('Будь ласка, введіть вашу посаду');
-            return;
-        }
-        userData.position = position;
+// Питання для вікторини
+const quizQuestions = [
+    {
+        question: "Яка столиця України?",
+        answers: ["Львів", "Київ", "Харків", "Одеса"],
+        correct: 1
+    },
+    {
+        question: "Яка найдовша річка в Україні?",
+        answers: ["Дніпро", "Дунай", "Дністер", "Південний Буг"],
+        correct: 0
+    },
+    {
+        question: "Яка найвища гора в Україні?",
+        answers: ["Говерла", "Піп Іван", "Петрос", "Бребенескул"],
+        correct: 0
     }
+];
 
-    // Приховуємо поточний крок
-    const currentStepElement = document.getElementById(`step${currentStep}`);
-    const nextStepElement = document.getElementById(`step${currentStep + 1}`);
-    
-    if (currentStepElement && nextStepElement) {
-        currentStepElement.style.display = 'none';
-        nextStepElement.style.display = 'block';
-        console.log('Кроки успішно змінені');
-    } else {
-        console.error('Не знайдено елементи кроків:', {
-            current: currentStepElement,
-            next: nextStepElement
-        });
-    }
-}
+let currentQuestion = 0;
+let score = 0;
 
-// Функція для повернення до попереднього кроку
-function prevStep(currentStep) {
-    console.log('Повернення до кроку:', currentStep - 1);
+// Ініціалізація після завантаження DOM
+document.addEventListener('DOMContentLoaded', function() {
+    tg.expand();
+    tg.enableClosingConfirmation();
     
-    const currentStepElement = document.getElementById(`step${currentStep}`);
-    const prevStepElement = document.getElementById(`step${currentStep - 1}`);
+    // Ініціалізація обробників подій
+    initEventHandlers();
+});
+
+function initEventHandlers() {
+    // Обробники для авторизації
+    const nextButtons = document.querySelectorAll('.next-step');
+    const prevButtons = document.querySelectorAll('.prev-step');
+    const completeButton = document.querySelector('.complete-auth');
     
-    if (currentStepElement && prevStepElement) {
-        currentStepElement.style.display = 'none';
-        prevStepElement.style.display = 'block';
-        console.log('Повернення успішне');
-    } else {
-        console.error('Не знайдено елементи кроків:', {
-            current: currentStepElement,
-            prev: prevStepElement
-        });
+    nextButtons.forEach(button => {
+        button.addEventListener('click', nextStep);
+    });
+    
+    prevButtons.forEach(button => {
+        button.addEventListener('click', prevStep);
+    });
+    
+    if (completeButton) {
+        completeButton.addEventListener('click', completeAuth);
     }
 }
 
-// Функція для завершення авторизації
-function completeAuth() {
-    console.log('Завершення авторизації');
+function nextStep() {
+    console.log('Next step clicked');
+    const currentStepElement = document.querySelector(`.step:nth-child(${currentStep})`);
+    const nextStepElement = document.querySelector(`.step:nth-child(${currentStep + 1})`);
     
-    const cityInput = document.getElementById('cityInput');
-    const city = cityInput.value.trim();
-    console.log('Введене місто:', city);
-    
-    if (!city) {
-        alert('Будь ласка, введіть ваше місто');
+    if (!currentStepElement || !nextStepElement) {
+        console.error('Step elements not found');
         return;
     }
-    userData.city = city;
-
-    // Оновлюємо інформацію на головному екрані
-    const userNameElement = document.getElementById('userName');
-    const userPositionElement = document.getElementById('userPosition');
-    const userCityElement = document.getElementById('userCity');
     
-    if (userNameElement && userPositionElement && userCityElement) {
-        userNameElement.textContent = userData.name;
-        userPositionElement.textContent = userData.position;
-        userCityElement.textContent = userData.city;
-        console.log('Інформація користувача оновлена');
-    } else {
-        console.error('Не знайдено елементи для відображення інформації');
+    // Зберігаємо дані поточного кроку
+    const input = currentStepElement.querySelector('input');
+    if (input) {
+        switch(currentStep) {
+            case 1:
+                userData.name = input.value;
+                break;
+            case 2:
+                userData.age = input.value;
+                break;
+            case 3:
+                userData.email = input.value;
+                break;
+        }
     }
-
-    // Приховуємо екран авторизації і показуємо головний екран
-    const authScreen = document.getElementById('authScreen');
-    const mainScreen = document.getElementById('mainScreen');
     
-    if (authScreen && mainScreen) {
-        authScreen.style.display = 'none';
-        mainScreen.style.display = 'block';
-        console.log('Екрани успішно змінені');
-    } else {
-        console.error('Не знайдено екрани');
-    }
+    currentStepElement.style.display = 'none';
+    nextStepElement.style.display = 'block';
+    currentStep++;
+}
 
-    // Відправляємо дані в Telegram
-    try {
-        tg.sendData(JSON.stringify({
-            type: 'auth_complete',
-            userData: userData
-        }));
-        console.log('Дані успішно відправлені в Telegram');
-    } catch (error) {
-        console.error('Помилка при відправці даних:', error);
+function prevStep() {
+    console.log('Prev step clicked');
+    const currentStepElement = document.querySelector(`.step:nth-child(${currentStep})`);
+    const prevStepElement = document.querySelector(`.step:nth-child(${currentStep - 1})`);
+    
+    if (!currentStepElement || !prevStepElement) {
+        console.error('Step elements not found');
+        return;
     }
+    
+    currentStepElement.style.display = 'none';
+    prevStepElement.style.display = 'block';
+    currentStep--;
+}
+
+function completeAuth() {
+    console.log('Complete auth clicked');
+    const authScreen = document.querySelector('.auth-screen');
+    const quizScreen = document.querySelector('.quiz-screen');
+    const userInfo = document.querySelector('.user-info');
+    
+    if (!authScreen || !quizScreen || !userInfo) {
+        console.error('Required elements not found');
+        return;
+    }
+    
+    // Оновлюємо інформацію про користувача
+    userInfo.innerHTML = `
+        <p><strong>Ім'я:</strong> ${userData.name}</p>
+        <p><strong>Вік:</strong> ${userData.age}</p>
+        <p><strong>Email:</strong> ${userData.email}</p>
+    `;
+    
+    // Показуємо вікторину
+    authScreen.style.display = 'none';
+    quizScreen.style.display = 'block';
+    
+    // Запускаємо перше питання
+    showQuestion();
+}
+
+function showQuestion() {
+    const questionContainer = document.querySelector('.question-container');
+    const progressBar = document.querySelector('.progress');
+    
+    if (!questionContainer || !progressBar) {
+        console.error('Question elements not found');
+        return;
+    }
+    
+    const question = quizQuestions[currentQuestion];
+    
+    // Оновлюємо прогрес
+    const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    
+    // Створюємо HTML для питання
+    questionContainer.innerHTML = `
+        <h3>${question.question}</h3>
+        <div class="answers-container">
+            ${question.answers.map((answer, index) => `
+                <button class="answer-button" onclick="checkAnswer(${index})">
+                    ${answer}
+                </button>
+            `).join('')}
+        </div>
+    `;
+}
+
+function checkAnswer(selectedIndex) {
+    const question = quizQuestions[currentQuestion];
+    const buttons = document.querySelectorAll('.answer-button');
+    
+    // Блокуємо всі кнопки
+    buttons.forEach(button => button.disabled = true);
+    
+    // Показуємо правильну відповідь
+    buttons[question.correct].classList.add('correct');
+    if (selectedIndex !== question.correct) {
+        buttons[selectedIndex].classList.add('incorrect');
+    }
+    
+    // Оновлюємо рахунок
+    if (selectedIndex === question.correct) {
+        score++;
+    }
+    
+    // Показуємо наступне питання через 1.5 секунди
+    setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < quizQuestions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }, 1500);
+}
+
+function showResults() {
+    const quizScreen = document.querySelector('.quiz-screen');
+    const resultScreen = document.querySelector('.result-screen');
+    
+    if (!quizScreen || !resultScreen) {
+        console.error('Result elements not found');
+        return;
+    }
+    
+    // Оновлюємо результати
+    document.querySelector('.correct-answers').textContent = score;
+    document.querySelector('.total-questions').textContent = quizQuestions.length;
+    
+    // Показуємо екран результатів
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    
+    // Відправляємо результати в Telegram
+    tg.sendData(JSON.stringify({
+        type: 'quiz_results',
+        user: userData,
+        score: score,
+        total: quizQuestions.length
+    }));
+}
+
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    
+    const resultScreen = document.querySelector('.result-screen');
+    const quizScreen = document.querySelector('.quiz-screen');
+    
+    if (!resultScreen || !quizScreen) {
+        console.error('Quiz elements not found');
+        return;
+    }
+    
+    resultScreen.style.display = 'none';
+    quizScreen.style.display = 'block';
+    
+    showQuestion();
 }
 
 // Функція для відправки повідомлення
