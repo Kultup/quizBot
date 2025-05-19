@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Мій Telegram Web App</h1>
+        <div class="card">
+            <h2>Привіт, <span id="userName">Користувач</span>!</h2>
+            <div class="form-group">
+                <input type="text" id="messageInput" placeholder="Введіть повідомлення">
+                <button onclick="sendMessage()">Надіслати</button>
+            </div>
+            <div id="messages" class="messages"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
