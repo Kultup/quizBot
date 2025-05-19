@@ -17,7 +17,7 @@
                 <div class="step" id="step1">
                     <h2>Крок 1: Ваше ім'я</h2>
                     <input type="text" id="nameInput" placeholder="Введіть ваше ім'я">
-                    <button onclick="nextStep(1)">Далі</button>
+                    <button onclick="nextStep()">Далі</button>
                 </div>
                 
                 <!-- Крок 2: Посада -->
@@ -25,8 +25,8 @@
                     <h2>Крок 2: Ваша посада</h2>
                     <input type="text" id="positionInput" placeholder="Введіть вашу посаду">
                     <div class="button-group">
-                        <button onclick="prevStep(2)">Назад</button>
-                        <button onclick="nextStep(2)">Далі</button>
+                        <button onclick="prevStep()">Назад</button>
+                        <button onclick="nextStep()">Далі</button>
                     </div>
                 </div>
                 
@@ -35,7 +35,7 @@
                     <h2>Крок 3: Ваше місто</h2>
                     <input type="text" id="cityInput" placeholder="Введіть ваше місто">
                     <div class="button-group">
-                        <button onclick="prevStep(3)">Назад</button>
+                        <button onclick="prevStep()">Назад</button>
                         <button onclick="completeAuth()">Завершити</button>
                     </div>
                 </div>
