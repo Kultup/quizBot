@@ -94,76 +94,74 @@ function prevStep() {
 
 function completeAuth() {
     console.log('Complete auth clicked');
-    const authScreen = document.querySelector('.auth-screen');
-    const quizScreen = document.querySelector('.quiz-screen');
-    const userInfo = document.querySelector('.user-info');
-    
-    if (!authScreen || !quizScreen || !userInfo) {
+    const authScreen = document.getElementById('authScreen');
+    const mainScreen = document.getElementById('mainScreen');
+    const userNameElement = document.getElementById('userName');
+    const userPositionElement = document.getElementById('userPosition');
+    const userCityElement = document.getElementById('userCity');
+
+    if (!authScreen || !mainScreen || !userNameElement || !userPositionElement || !userCityElement) {
         console.error('Required elements not found');
         return;
     }
-    
+
     // Оновлюємо інформацію про користувача
-    userInfo.innerHTML = `
-        <p><strong>Ім'я:</strong> ${userData.name}</p>
-        <p><strong>Вік:</strong> ${userData.age}</p>
-        <p><strong>Email:</strong> ${userData.email}</p>
-    `;
-    
-    // Показуємо вікторину
+    userNameElement.textContent = userData.name;
+    userPositionElement.textContent = userData.age; // якщо age = посада, інакше замініть на відповідне поле
+    userCityElement.textContent = userData.email;   // якщо email = місто, інакше замініть на відповідне поле
+
+    // Показуємо головний екран
     authScreen.style.display = 'none';
-    quizScreen.style.display = 'block';
-    
-    // Запускаємо перше питання
-    showQuestion();
+    mainScreen.style.display = 'block';
 }
 
 function showQuestion() {
-    const questionContainer = document.querySelector('.question-container');
-    const progressBar = document.querySelector('.progress');
-    
-    if (!questionContainer || !progressBar) {
+    const questionText = document.getElementById('questionText');
+    const answersContainer = document.getElementById('answersContainer');
+    const currentQuestionElem = document.getElementById('currentQuestion');
+    const totalQuestionsElem = document.getElementById('totalQuestions');
+    const quizProgress = document.getElementById('quizProgress');
+
+    if (!questionText || !answersContainer || !currentQuestionElem || !totalQuestionsElem || !quizProgress) {
         console.error('Question elements not found');
         return;
     }
-    
+
     const question = quizQuestions[currentQuestion];
-    
-    // Оновлюємо прогрес
-    const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
-    progressBar.style.width = `${progress}%`;
-    
-    // Створюємо HTML для питання
-    questionContainer.innerHTML = `
-        <h3>${question.question}</h3>
-        <div class="answers-container">
-            ${question.answers.map((answer, index) => `
-                <button class="answer-button" onclick="checkAnswer(${index})">
-                    ${answer}
-                </button>
-            `).join('')}
-        </div>
-    `;
+    currentQuestionElem.textContent = currentQuestion + 1;
+    totalQuestionsElem.textContent = quizQuestions.length;
+    quizProgress.style.width = (((currentQuestion + 1) / quizQuestions.length) * 100) + '%';
+
+    questionText.textContent = question.question;
+    answersContainer.innerHTML = '';
+    question.answers.forEach((answer, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-button';
+        btn.textContent = answer;
+        btn.onclick = () => checkAnswer(index);
+        answersContainer.appendChild(btn);
+    });
+    document.getElementById('nextQuestion').style.display = 'none';
 }
 
 function checkAnswer(selectedIndex) {
     const question = quizQuestions[currentQuestion];
     const buttons = document.querySelectorAll('.answer-button');
-    
+
     // Блокуємо всі кнопки
     buttons.forEach(button => button.disabled = true);
-    
+
     // Показуємо правильну відповідь
     buttons[question.correct].classList.add('correct');
     if (selectedIndex !== question.correct) {
         buttons[selectedIndex].classList.add('incorrect');
     }
-    
+
     // Оновлюємо рахунок
     if (selectedIndex === question.correct) {
         score++;
     }
-    
+
     // Показуємо наступне питання через 1.5 секунди
     setTimeout(() => {
         currentQuestion++;
@@ -176,23 +174,24 @@ function checkAnswer(selectedIndex) {
 }
 
 function showResults() {
-    const quizScreen = document.querySelector('.quiz-screen');
-    const resultScreen = document.querySelector('.result-screen');
-    
-    if (!quizScreen || !resultScreen) {
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const correctAnswersElem = document.getElementById('correctAnswers');
+    const totalAnswersElem = document.getElementById('totalAnswers');
+    const resultPercentageElem = document.getElementById('resultPercentage');
+
+    if (!quizScreen || !resultScreen || !correctAnswersElem || !totalAnswersElem || !resultPercentageElem) {
         console.error('Result elements not found');
         return;
     }
-    
-    // Оновлюємо результати
-    document.querySelector('.correct-answers').textContent = score;
-    document.querySelector('.total-questions').textContent = quizQuestions.length;
-    
-    // Показуємо екран результатів
+
+    correctAnswersElem.textContent = score;
+    totalAnswersElem.textContent = quizQuestions.length;
+    resultPercentageElem.textContent = Math.round((score / quizQuestions.length) * 100);
+
     quizScreen.style.display = 'none';
     resultScreen.style.display = 'block';
-    
-    // Відправляємо результати в Telegram
+
     tg.sendData(JSON.stringify({
         type: 'quiz_results',
         user: userData,
@@ -204,18 +203,18 @@ function showResults() {
 function restartQuiz() {
     currentQuestion = 0;
     score = 0;
-    
-    const resultScreen = document.querySelector('.result-screen');
-    const quizScreen = document.querySelector('.quiz-screen');
-    
+
+    const resultScreen = document.getElementById('resultScreen');
+    const quizScreen = document.getElementById('quizScreen');
+
     if (!resultScreen || !quizScreen) {
         console.error('Quiz elements not found');
         return;
     }
-    
+
     resultScreen.style.display = 'none';
     quizScreen.style.display = 'block';
-    
+
     showQuestion();
 }
 
